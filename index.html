@@ -6,30 +6,60 @@
   <title>Krenox | Tech & Engineering Team</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    :root {
-      --bg:#080d12; --surface:#0d1520; --surface2:#111d2e;
-      --cyan:#00d4ff; --cyan-glow:rgba(0,212,255,0.35);
-      --gold:#ffd700; --gold-glow:rgba(255,215,0,0.3);
-      --text:#e8f4f8; --muted:#6a8fa8; --border:rgba(0,212,255,0.14);
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#080d12;--surface:#0d1520;--surface2:#111d2e;
+      --cyan:#00d4ff;--cyan-glow:rgba(0,212,255,0.35);
+      --gold:#ffd700;--gold-glow:rgba(255,215,0,0.3);
+      --text:#e8f4f8;--muted:#6a8fa8;--border:rgba(0,212,255,0.14);
     }
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden}
-    ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:2px}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:2px}
+
+    /* SPLASH */
+    #splash{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:opacity 0.6s ease}
+    #splash.hide{opacity:0;pointer-events:none}
+    .splash-logo{font-family:'Orbitron',sans-serif;font-size:3.5rem;font-weight:900;color:var(--cyan);text-shadow:0 0 40px var(--cyan-glow);animation:pulse 1.2s ease-in-out infinite}
+    .splash-sub{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted)}
+    .splash-bar{width:200px;height:2px;background:var(--surface2);border-radius:2px;overflow:hidden}
+    .splash-fill{height:100%;background:var(--cyan);border-radius:2px;animation:load 1.8s ease forwards;box-shadow:0 0 8px var(--cyan-glow)}
+    @keyframes load{from{width:0}to{width:100%}}
+    @keyframes pulse{0%,100%{text-shadow:0 0 30px var(--cyan-glow)}50%{text-shadow:0 0 60px var(--cyan-glow),0 0 100px var(--cyan-glow)}}
+
+    /* BACK TO TOP */
+    #btt{position:fixed;bottom:1.5rem;right:1.5rem;width:40px;height:40px;background:var(--surface2);border:1px solid var(--cyan);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--cyan);font-size:1rem;z-index:500;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:translateY(10px)}
+    #btt.show{opacity:1;transform:translateY(0)}
+    #btt:hover{background:rgba(0,212,255,0.15)}
 
     /* NAV */
     nav{display:flex;justify-content:space-between;align-items:center;padding:0.9rem 4vw;position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,13,18,0.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
-    .logo-area{display:flex;align-items:center;gap:0.7rem}
+    .logo-area{display:flex;align-items:center;gap:0.7rem;cursor:pointer}
     .logo-text{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--cyan);letter-spacing:0.12em;text-shadow:0 0 18px var(--cyan-glow);line-height:1.1}
     .logo-sub{font-size:0.52rem;letter-spacing:0.22em;color:var(--muted);text-transform:uppercase;display:block}
     .nav-links{display:flex;gap:0.3rem;list-style:none}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:0.5rem 1rem;border-bottom:2px solid transparent;transition:all 0.3s;cursor:pointer}
     .nav-links a:hover,.nav-links a.active{color:var(--cyan);border-bottom-color:var(--cyan)}
     .nav-count{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);font-size:0.55rem;padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.3rem;font-family:'Orbitron',sans-serif}
+    .nav-right{display:flex;align-items:center;gap:0.6rem}
+    .theme-toggle{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:0.9rem;transition:all 0.3s}
+    .theme-toggle:hover{border-color:var(--cyan);color:var(--cyan)}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+    .hamburger span{width:22px;height:2px;background:var(--muted);border-radius:2px;transition:all 0.3s}
+    .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+    .mobile-menu{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(8,13,18,0.98);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:1rem 4vw;z-index:999;flex-direction:column;gap:0.2rem}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:color 0.3s}
+    .mobile-menu a:hover,.mobile-menu a.active{color:var(--cyan)}
 
     /* HERO */
     .hero-banner{margin-top:66px;height:300px;position:relative;overflow:hidden;background:linear-gradient(135deg,#060e18 0%,#0a1828 40%,#081520 100%);display:flex;align-items:flex-end;padding:0 4vw 2.5rem}
     .hero-banner::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:50px 50px}
+    #particles{position:absolute;inset:0;z-index:0;overflow:hidden}
+    .particle{position:absolute;border-radius:50%;background:var(--cyan);animation:drift linear infinite;opacity:0}
+    @keyframes drift{0%{transform:translateY(100%) translateX(0);opacity:0.6}100%{transform:translateY(-100%) translateX(40px);opacity:0}}
     .hero-orb{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 70%);border-radius:50%;z-index:1;display:flex;align-items:center;justify-content:center}
     .hero-orb-text{font-family:'Orbitron',sans-serif;font-size:5rem;font-weight:900;color:var(--cyan);opacity:0.12;animation:float 4s ease-in-out infinite;text-shadow:0 0 40px var(--cyan-glow)}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -39,19 +69,17 @@
     .hero-content h1 span{color:var(--cyan);text-shadow:0 0 30px var(--cyan-glow);display:block}
     .hero-content p{color:var(--muted);font-size:0.88rem;margin-top:0.5rem;max-width:48ch}
     .hero-stats{display:flex;gap:2rem;margin-top:1.2rem}
-    .hero-stat{text-align:left}
     .hero-stat-num{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--cyan)}
     .hero-stat-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
 
     /* TABS */
-    .page-tabs{display:flex;gap:0;padding:0 4vw;max-width:1400px;margin:1.5rem auto 0}
-    .tab-btn{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.5rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.3s}
+    .page-tabs{display:flex;gap:0;padding:0 4vw;max-width:1400px;margin:1.5rem auto 0;flex-wrap:wrap}
+    .tab-btn{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.2rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.3s}
     .tab-btn:first-child{border-radius:4px 0 0 4px}
     .tab-btn:last-child{border-radius:0 4px 4px 0}
     .tab-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan)}
     .tab-btn:hover:not(.active){color:var(--cyan);border-color:var(--cyan)}
 
-    /* PAGE SECTIONS */
     .page-section{display:none}
     .page-section.active{display:block}
 
@@ -60,7 +88,6 @@
     .card-sm{padding:1.2rem}
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-    /* SECTION HELPERS */
     .section-head{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem}
     .section-head span{font-size:0.9rem;color:var(--cyan)}
     .section-head h3{font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase}
@@ -71,7 +98,6 @@
     .main-layout{display:grid;grid-template-columns:280px 1fr;gap:1.5rem;padding:1.5rem 4vw 3rem;max-width:1400px;margin:0 auto}
     .sidebar{display:flex;flex-direction:column;gap:1.2rem}
     .main-content{display:flex;flex-direction:column;gap:1.2rem}
-
     .profile-card{text-align:center;position:relative;overflow:hidden}
     .profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),transparent)}
     .avatar-ring{width:100px;height:100px;border-radius:50%;border:2px solid var(--cyan);padding:3px;margin:0 auto 1rem;box-shadow:0 0 20px var(--cyan-glow)}
@@ -85,13 +111,11 @@
     .social-row{display:flex;gap:0.6rem;justify-content:center;margin-top:1rem}
     .social-btn{width:32px;height:32px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--muted);cursor:pointer;transition:all 0.3s;text-decoration:none}
     .social-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-
     .quick-links-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem}
     .qlink{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.9rem 0.5rem;text-align:center;cursor:pointer;transition:all 0.3s;text-decoration:none;color:var(--text);display:block}
     .qlink:hover{border-color:var(--cyan);color:var(--cyan)}
     .qlink-icon{font-size:1.3rem;margin-bottom:0.3rem}
     .qlink-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
-
     .progress-ring-wrap{display:flex;justify-content:center;margin:1rem 0}
     .progress-ring-svg{transform:rotate(-90deg)}
     .progress-ring-bg{fill:none;stroke:var(--surface2);stroke-width:8}
@@ -102,25 +126,23 @@
     .stat-mini{background:var(--surface2);border-radius:4px;padding:0.6rem;text-align:center}
     .stat-mini-num{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--cyan)}
     .stat-mini-label{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
-
     .profile-info-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden}
     .profile-info-cell{background:var(--surface);padding:1.2rem;text-align:center}
     .profile-info-icon{font-size:1.4rem;color:var(--cyan);margin-bottom:0.5rem}
     .profile-info-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
     .profile-info-value{font-size:0.88rem;font-weight:500}
-
     .skills-interests{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
-    .skill-item{margin-bottom:1rem}
+    .skill-item{margin-bottom:1rem;position:relative}
     .skill-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
     .skill-name{font-size:0.82rem;color:var(--text)}
     .skill-pct{font-size:0.75rem;color:var(--cyan);font-family:'Orbitron',sans-serif}
-    .skill-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+    .skill-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;cursor:pointer;position:relative}
+    .skill-bar:hover .skill-tooltip{opacity:1;transform:translateY(-4px)}
     .skill-fill{height:100%;background:linear-gradient(90deg,var(--cyan),rgba(0,212,255,0.5));border-radius:2px;box-shadow:0 0 6px var(--cyan-glow)}
-
+    .skill-tooltip{position:absolute;bottom:110%;left:50%;transform:translateX(-50%) translateY(0);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.3rem 0.6rem;font-size:0.62rem;color:var(--text);white-space:nowrap;opacity:0;transition:all 0.2s;pointer-events:none;z-index:10}
     .interests-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem}
     .interest-tag{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.6rem 0.8rem;font-size:0.78rem;display:flex;align-items:center;gap:0.5rem;transition:border-color 0.3s}
     .interest-tag:hover{border-color:var(--cyan)}
-
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
     .event-item{display:flex;gap:1rem;align-items:flex-start;padding-bottom:1rem;border-bottom:1px solid var(--border)}
     .event-item:last-child{border-bottom:none;padding-bottom:0}
@@ -129,26 +151,23 @@
     .event-month{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
     .event-title{font-size:0.82rem;font-weight:500;margin-bottom:0.2rem}
     .event-meta{font-size:0.7rem;color:var(--muted)}
-
     .activity-item{display:flex;gap:0.8rem;align-items:flex-start;padding-bottom:0.9rem;border-bottom:1px solid var(--border)}
     .activity-item:last-child{border-bottom:none;padding-bottom:0}
     .activity-dot{width:28px;height:28px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--cyan);flex-shrink:0;margin-top:2px}
     .activity-title{font-size:0.82rem;font-weight:500;margin-bottom:0.1rem}
     .activity-sub{font-size:0.7rem;color:var(--muted)}
-
     .achievements-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
     .achievement-item{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.3s}
     .achievement-item:hover{border-color:var(--cyan);transform:translateY(-3px)}
     .achievement-icon{font-size:1.8rem;margin-bottom:0.6rem}
     .achievement-title{font-size:0.78rem;font-weight:600;margin-bottom:0.2rem}
     .achievement-sub{font-size:0.65rem;color:var(--muted)}
-
     .quote-card{background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);border:1px solid var(--border);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden}
     .quote-card::before{content:'\201C';font-family:'Orbitron',sans-serif;font-size:5rem;color:var(--cyan);opacity:0.1;position:absolute;top:-10px;left:10px;line-height:1}
     .quote-text{font-size:1rem;font-style:italic;line-height:1.7;color:var(--text)}
     .quote-author{font-size:0.7rem;color:var(--cyan);letter-spacing:0.15em;text-transform:uppercase;margin-top:0.8rem}
 
-    /* LEADERSHIP SPOTLIGHT */
+    /* LEADERSHIP */
     .leadership-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
     .leader-card{background:var(--surface2);border-radius:6px;padding:1.2rem;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden}
     .leader-card.lead{border:1px solid var(--gold);box-shadow:0 0 16px var(--gold-glow)}
@@ -163,25 +182,74 @@
     .leader-badge.cyan{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.4);color:var(--cyan)}
     .leader-dept{font-size:0.68rem;color:var(--muted)}
 
-    .services-bar{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem 2rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
-    .services-label{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-    .services-items{display:flex;gap:0;flex:1;flex-wrap:wrap}
-    .service-link{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1.2rem;font-size:0.75rem;color:var(--muted);text-decoration:none;border-left:1px solid var(--border);transition:color 0.3s;white-space:nowrap}
-    .service-link:hover{color:var(--cyan)}
+    /* SERVICES PAGE */
+    .services-section{padding:2rem 4vw 4rem;max-width:1400px;margin:0 auto}
+    .services-hero{background:linear-gradient(135deg,var(--surface2),#0a1828);border:1px solid var(--border);border-radius:8px;padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden;text-align:center}
+    .services-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px}
+    .services-hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:900;color:var(--cyan);text-shadow:0 0 20px var(--cyan-glow);position:relative;z-index:1;margin-bottom:0.7rem}
+    .services-hero p{color:var(--muted);font-size:0.9rem;max-width:60ch;margin:0 auto;position:relative;z-index:1}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem;margin-bottom:2.5rem}
+    .service-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.8rem;transition:border-color 0.3s,transform 0.3s;position:relative;overflow:hidden}
+    .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent)}
+    .service-card:hover{border-color:var(--cyan);transform:translateY(-4px)}
+    .service-icon-wrap{width:56px;height:56px;border-radius:10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1rem}
+    .service-title{font-family:'Orbitron',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;margin-bottom:0.5rem;color:var(--text)}
+    .service-desc{font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:1rem}
+    .service-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:1rem}
+    .service-tag{background:var(--surface2);border:1px solid var(--border);border-radius:3px;font-size:0.6rem;padding:0.18rem 0.45rem;color:var(--muted)}
+    .service-cta{display:inline-block;font-size:0.7rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;border-bottom:1px solid rgba(0,212,255,0.3);padding-bottom:0.1rem;transition:border-color 0.3s}
+    .service-cta:hover{border-color:var(--cyan)}
+    .services-process{margin-bottom:2.5rem}
+    .process-title{font-family:'Orbitron',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.2rem}
+    .process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;position:relative}
+    .process-steps::before{content:'';position:absolute;top:28px;left:0;right:0;height:1px;background:var(--border);z-index:0}
+    .process-step{text-align:center;padding:0 1rem;position:relative;z-index:1}
+    .step-num{width:56px;height:56px;border-radius:50%;background:var(--surface);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--cyan);margin:0 auto 0.8rem;box-shadow:0 0 12px var(--cyan-glow)}
+    .step-title{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem}
+    .step-desc{font-size:0.75rem;color:var(--muted)}
+    .services-cta-band{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(0,212,255,0.02));border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:2rem;text-align:center}
+    .services-cta-band h3{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem}
+    .services-cta-band p{font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem}
+    .cta-btn{display:inline-block;background:var(--cyan);color:#000;font-family:'Orbitron',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.7rem 2rem;border-radius:4px;text-decoration:none;cursor:pointer;transition:box-shadow 0.3s}
+    .cta-btn:hover{box-shadow:0 0 20px var(--cyan-glow)}
 
     /* TEAM PAGE */
     .team-section{padding:1.5rem 4vw 3rem;max-width:1400px;margin:0 auto}
-    .team-section-title{font-family:'Orbitron',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.5rem}
-    .team-sub{font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem}
+    .team-section-title{font-family:'Orbitron',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.4rem}
+    .team-sub{font-size:0.82rem;color:var(--muted);margin-bottom:1rem}
+
+    /* SEARCH & FILTER */
+    .team-controls{display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+    .search-box{flex:1;min-width:200px;position:relative}
+    .search-box input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.55rem 0.8rem 0.55rem 2.2rem;color:var(--text);font-family:'Exo 2',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.3s}
+    .search-box input:focus{border-color:var(--cyan)}
+    .search-box input::placeholder{color:var(--muted)}
+    .search-icon{position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.8rem}
+    .filter-btns{display:flex;gap:0.4rem;flex-wrap:wrap}
+    .filter-btn{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.45rem 0.9rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);cursor:pointer;transition:all 0.3s;white-space:nowrap}
+    .filter-btn:hover,.filter-btn.active{background:rgba(0,212,255,0.1);border-color:var(--cyan);color:var(--cyan)}
+
+    /* LEGEND */
+    .role-legend{display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:1.5rem;padding:0.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;align-items:center}
+    .legend-label{font-family:'Orbitron',sans-serif;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-right:0.3rem}
+    .legend-item{display:flex;align-items:center;gap:0.3rem;font-size:0.65rem;color:var(--muted)}
+    .legend-dot{width:8px;height:8px;border-radius:50%}
+    .legend-dot.aerospace{background:#00d4ff}
+    .legend-dot.dev{background:#7b61ff}
+    .legend-dot.design{background:#ff6b9d}
+    .legend-dot.qa{background:#00e676}
+    .legend-dot.content{background:#ffa726}
+    .legend-dot.lead{background:#ffd700}
 
     /* LEADERSHIP BANNER */
     .leadership-banner{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:2rem}
-    .lead-profile-card{border-radius:8px;padding:1.5rem;display:flex;align-items:center;gap:1.2rem;position:relative;overflow:hidden}
+    .lead-profile-card{border-radius:8px;padding:1.5rem;display:flex;align-items:center;gap:1.2rem;position:relative;overflow:hidden;cursor:pointer}
     .lead-profile-card.team-lead{background:linear-gradient(135deg,rgba(255,215,0,0.06),rgba(255,215,0,0.02));border:2px solid var(--gold);box-shadow:0 0 24px var(--gold-glow)}
     .lead-profile-card.asst-lead{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(0,212,255,0.02));border:2px solid var(--cyan);box-shadow:0 0 16px var(--cyan-glow)}
     .lead-profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
     .lead-profile-card.team-lead::before{background:linear-gradient(90deg,var(--gold),transparent)}
     .lead-profile-card.asst-lead::before{background:linear-gradient(90deg,var(--cyan),transparent)}
+    .lead-profile-card:hover{transform:translateY(-3px);transition:transform 0.3s}
     .lead-rank{position:absolute;top:0.8rem;right:1rem;font-size:1.4rem}
     .lead-av-lg{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;flex-shrink:0}
     .lead-av-lg.gold{background:rgba(255,215,0,0.08);border:3px solid var(--gold);color:var(--gold);box-shadow:0 0 14px var(--gold-glow)}
@@ -206,15 +274,23 @@
     .team-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
     /* MEMBER CARDS */
-    .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
-    .member-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:pointer}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+    .member-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:pointer;position:relative}
     .member-card:hover{border-color:var(--cyan);transform:translateY(-4px)}
+    .member-card[data-hidden="true"]{display:none}
+    .online-dot{position:absolute;top:1rem;right:1rem;width:9px;height:9px;border-radius:50%;background:#00e676;box-shadow:0 0 6px #00e676;animation:blink 2s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
     .member-card-header{background:linear-gradient(135deg,var(--surface2),#0a1828);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem;position:relative}
     .member-card-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
     .member-avatar{width:60px;height:60px;border-radius:50%;border:2px solid var(--cyan);overflow:hidden;flex-shrink:0;box-shadow:0 0 10px var(--cyan-glow)}
     .member-avatar-placeholder{width:100%;height:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--cyan)}
     .member-name{font-family:'Orbitron',sans-serif;font-size:0.78rem;font-weight:700;margin-bottom:0.25rem}
-    .member-role-badge{display:inline-block;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:20px;margin-bottom:0.2rem}
+    .member-role-badge{display:inline-block;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:20px;margin-bottom:0.2rem}
+    .badge-dev{background:rgba(123,97,255,0.15);border:1px solid rgba(123,97,255,0.4);color:#9c82ff}
+    .badge-qa{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:#00e676}
+    .badge-design{background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.3);color:#ff6b9d}
+    .badge-content{background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.3);color:#ffa726}
+    .badge-aerospace{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan)}
     .member-dept{font-size:0.68rem;color:var(--muted)}
     .member-card-body{padding:1rem 1.5rem}
     .member-bio{font-size:0.8rem;color:var(--muted);line-height:1.7;margin-bottom:0.8rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -224,6 +300,8 @@
     .member-link-btn{flex:1;text-align:center;padding:0.35rem;border:1px solid var(--border);border-radius:4px;font-size:0.62rem;color:var(--muted);text-decoration:none;transition:all 0.3s}
     .member-link-btn:hover{border-color:var(--cyan);color:var(--cyan)}
     .view-profile-btn{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.25);color:var(--cyan)}
+    .no-results{display:none;text-align:center;padding:3rem;color:var(--muted);font-size:0.85rem;grid-column:1/-1}
+    .no-results.show{display:block}
 
     /* MODAL */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center;padding:1rem}
@@ -241,8 +319,7 @@
     .modal-avatar.cyan-av{border:3px solid var(--cyan);box-shadow:0 0 20px var(--cyan-glow)}
     .modal-avatar.def-av{border:2px solid var(--cyan);box-shadow:0 0 14px var(--cyan-glow)}
     .modal-avatar-placeholder{width:100%;height:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.8rem}
-    .modal-avatar-placeholder.gold-text{color:var(--gold)}
-    .modal-avatar-placeholder.cyan-text{color:var(--cyan)}
+    .gold-text{color:var(--gold)}.cyan-text{color:var(--cyan)}
     .modal-name{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.35rem}
     .modal-body{padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1.1rem}
     .modal-section h4{font-family:'Orbitron',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.55rem}
@@ -256,44 +333,78 @@
     .hobbies-grid{display:flex;flex-wrap:wrap;gap:0.5rem}
     .hobby-tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-size:0.7rem;padding:0.28rem 0.75rem;color:var(--muted)}
 
+    /* LIGHT MODE */
+    body.light{--bg:#f0f4f8;--surface:#ffffff;--surface2:#e8edf2;--text:#1a2332;--muted:#5a7090;--border:rgba(0,150,200,0.18)}
+    body.light nav{background:rgba(240,244,248,0.95)}
+
     @media(max-width:900px){
       .main-layout{grid-template-columns:1fr}
       .skills-interests,.two-col,.leadership-grid,.leadership-banner{grid-template-columns:1fr}
       .profile-info-row{grid-template-columns:1fr 1fr}
       .nav-links{display:none}
+      .hamburger{display:flex}
       .team-grid{grid-template-columns:1fr}
       .hero-stats{gap:1rem}
+      .process-steps{grid-template-columns:1fr 1fr}
+      .process-steps::before{display:none}
+      .services-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
 
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">KRENOX</div>
+  <div class="splash-sub">Tech &amp; Engineering Team</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- BACK TO TOP -->
+<div id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8679;</div>
+
+<!-- NAV -->
 <nav>
-  <div class="logo-area">
+  <div class="logo-area" onclick="switchTab('dashboard')">
     <div>
       <span class="logo-text">KRENOX</span>
       <span class="logo-sub">Tech &amp; Engineering Team</span>
     </div>
   </div>
   <ul class="nav-links">
-    <li><a href="#" class="active" onclick="switchTab('dashboard',this);return false">Dashboard</a></li>
-    <li><a href="#" onclick="switchTab('team',this);return false">Team <span class="nav-count">17</span></a></li>
+    <li><a class="active" onclick="switchTab('dashboard',this);return false">Dashboard</a></li>
+    <li><a onclick="switchTab('team',this);return false">Team <span class="nav-count">17</span></a></li>
+    <li><a onclick="switchTab('services',this);return false">Services</a></li>
     <li><a href="#">Projects</a></li>
     <li><a href="#">Awards</a></li>
-    <li><a href="#">Services</a></li>
   </ul>
-  <div class="nav-icon">&#128100;</div>
+  <div class="nav-right">
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9790;</div>
+    <div class="hamburger" id="ham" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="active" onclick="switchTab('dashboard',this);closeMobile();return false">Dashboard</a>
+  <a onclick="switchTab('team',this);closeMobile();return false">Team Members (17)</a>
+  <a onclick="switchTab('services',this);closeMobile();return false">Services</a>
+  <a href="#">Projects</a>
+  <a href="#">Awards</a>
+</div>
 
 <!-- HERO -->
 <div class="hero-banner">
+  <div id="particles"></div>
   <div class="hero-orb"><div class="hero-orb-text">KX</div></div>
   <div class="hero-content">
     <div class="hero-breadcrumb">Innovate &middot; Build &middot; Lead &middot; Fly</div>
     <h1>Engineering<br/><span>Excellence</span></h1>
-    <p>17 engineers. One mission. Building aerospace &amp; tech solutions that shape the future.</p>
+    <p>17 engineers united by aerospace &amp; technology — building systems that shape tomorrow.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num">17</div><div class="hero-stat-label">Team Members</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">17</div><div class="hero-stat-label">Members</div></div>
       <div class="hero-stat"><div class="hero-stat-num">28+</div><div class="hero-stat-label">Projects</div></div>
       <div class="hero-stat"><div class="hero-stat-num">6+</div><div class="hero-stat-label">Disciplines</div></div>
       <div class="hero-stat"><div class="hero-stat-num">2023</div><div class="hero-stat-label">Founded</div></div>
@@ -304,9 +415,10 @@
 <div class="page-tabs">
   <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
   <button class="tab-btn" onclick="switchTab('team',this)">Team Members</button>
+  <button class="tab-btn" onclick="switchTab('services',this)">Services</button>
 </div>
 
-<!-- ===== DASHBOARD ===== -->
+<!-- ============================= DASHBOARD ============================= -->
 <div id="dashboard" class="page-section active">
   <div class="main-layout">
     <aside class="sidebar">
@@ -319,9 +431,9 @@
           <div class="info-item"><span>&#128282;</span> KRX/23/TE/0001</div>
           <div class="info-item"><span>&#9993;</span> hello@krenox.com</div>
           <div class="info-item"><span>&#128205;</span> Nigeria</div>
-          <div class="info-item"><span>&#128640;</span> Lead: Samuel Okusanya</div>
-          <div class="info-item"><span>&#129351;</span> Asst: Nosa Praise</div>
-          <div class="info-item"><span>&#128197;</span> Member since 2023</div>
+          <div class="info-item"><span>&#128081;</span> Lead: Samuel Okusanya</div>
+          <div class="info-item"><span>&#11088;</span> Asst: Nosa Praise</div>
+          <div class="info-item"><span>&#128197;</span> Founded 2023</div>
         </div>
         <div class="social-row">
           <a class="social-btn" href="#">in</a>
@@ -334,9 +446,9 @@
         <div class="section-head"><span>&#128279;</span><h3>Quick Links</h3></div>
         <div class="quick-links-grid">
           <a class="qlink" href="#"><div class="qlink-icon">&#128187;</div><div class="qlink-label">Portfolio</div></a>
-          <a class="qlink" href="#"><div class="qlink-icon">&#128176;</div><div class="qlink-label">Services</div></a>
+          <a class="qlink" onclick="switchTab('services')" style="cursor:pointer"><div class="qlink-icon">&#128176;</div><div class="qlink-label">Services</div></a>
           <a class="qlink" href="#"><div class="qlink-icon">&#128197;</div><div class="qlink-label">Schedule</div></a>
-          <a class="qlink" href="#"><div class="qlink-icon">&#128218;</div><div class="qlink-label">Resources</div></a>
+          <a class="qlink" onclick="switchTab('team')" style="cursor:pointer"><div class="qlink-icon">&#128100;</div><div class="qlink-label">Team</div></a>
         </div>
       </div>
       <div class="card card-sm">
@@ -364,11 +476,10 @@
       <div class="profile-info-row">
         <div class="profile-info-cell"><div class="profile-info-icon">&#9992;</div><div class="profile-info-label">Focus</div><div class="profile-info-value">Aerospace &amp; Software</div></div>
         <div class="profile-info-cell"><div class="profile-info-icon">&#128736;</div><div class="profile-info-label">Tools</div><div class="profile-info-value">CATIA · CAD · React</div></div>
-        <div class="profile-info-cell"><div class="profile-info-icon">&#128640;</div><div class="profile-info-label">Status</div><div class="profile-info-value">Active &middot; Growing</div></div>
+        <div class="profile-info-cell"><div class="profile-info-icon">&#128640;</div><div class="profile-info-label">Status</div><div class="profile-info-value">Active · Growing</div></div>
         <div class="profile-info-cell"><div class="profile-info-icon">&#128100;</div><div class="profile-info-label">Members</div><div class="profile-info-value">17 Engineers</div></div>
       </div>
 
-      <!-- LEADERSHIP SPOTLIGHT -->
       <div class="card">
         <div class="section-head"><span>&#129351;</span><h3>Team Leadership</h3></div>
         <div class="section-underline"></div>
@@ -376,20 +487,12 @@
           <div class="leader-card lead">
             <div class="leader-card-crown">&#128081;</div>
             <div class="leader-av gold">SO</div>
-            <div>
-              <div class="leader-info-name">Samuel Okusanya</div>
-              <div class="leader-badge gold">Team Lead</div>
-              <div class="leader-dept">Aerospace · Robotics · Embedded Systems · Web Dev</div>
-            </div>
+            <div><div class="leader-info-name">Samuel Okusanya</div><div class="leader-badge gold">Team Lead</div><div class="leader-dept">Aerospace · Robotics · Embedded · Web Dev</div></div>
           </div>
           <div class="leader-card asst">
             <div class="leader-card-crown">&#11088;</div>
             <div class="leader-av cyan">NP</div>
-            <div>
-              <div class="leader-info-name">Nosa Praise</div>
-              <div class="leader-badge cyan">Asst. Team Lead</div>
-              <div class="leader-dept">Aerospace · Avionics · UI/UX Design</div>
-            </div>
+            <div><div class="leader-info-name">Nosa Praise</div><div class="leader-badge cyan">Asst. Team Lead</div><div class="leader-dept">Aerospace · Avionics · UI/UX Design</div></div>
           </div>
         </div>
       </div>
@@ -397,19 +500,19 @@
       <div class="card">
         <div class="section-head"><span>&#128100;</span><h3>About Krenox</h3></div>
         <div class="section-underline"></div>
-        <p class="about-text">Krenox is a 17-member tech and engineering team driven by a passion for aerospace innovation, software development, systems architecture, and AI. From designing NACA airfoil wing models and building ESP32-powered smart systems to developing sustainability apps and engineering collaboration platforms, our team spans aerodynamics, avionics, embedded systems, UI/UX design, web development, and quality assurance. We are united by one goal: to advance technology and serve our community with excellence.</p>
+        <p class="about-text">Krenox is a 17-member tech and engineering team driven by a passion for aerospace innovation, software development, systems architecture, and AI. From designing NACA airfoil wing models in CATIA and building ESP32-powered smart proximity systems, to developing sustainability apps and engineering collaboration platforms — our team spans aerodynamics, avionics, embedded systems, UI/UX design, web development, and quality assurance. We are united by one goal: advance technology and serve our community with excellence.</p>
       </div>
 
       <div class="skills-interests">
         <div class="card">
           <div class="section-head"><span>&#9881;</span><h3>Team Capabilities</h3></div>
           <div class="section-underline"></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">Aerospace &amp; CAD Design</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">Software Development</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">Embedded Systems</span><span class="skill-pct">82%</span></div><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">UI/UX &amp; Design</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">QA &amp; Testing</span><span class="skill-pct">78%</span></div><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
-          <div class="skill-item"><div class="skill-row"><span class="skill-name">Content &amp; Data</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">Aerospace &amp; CAD Design</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-tooltip">CATIA, AutoCAD, SolidWorks — wing design &amp; structural analysis</div><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">Software Development</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-tooltip">React, Node.js, Python, VS Code — web &amp; systems</div><div class="skill-fill" style="width:92%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">Embedded Systems</span><span class="skill-pct">82%</span></div><div class="skill-bar"><div class="skill-tooltip">ESP32, Arduino — IoT &amp; robotics hardware</div><div class="skill-fill" style="width:82%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">UI/UX &amp; Design</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-tooltip">Figma, Circuit Wizard — interface &amp; experience design</div><div class="skill-fill" style="width:80%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">QA &amp; Testing</span><span class="skill-pct">78%</span></div><div class="skill-bar"><div class="skill-tooltip">Structured evaluation, test plans &amp; quality workflows</div><div class="skill-fill" style="width:78%"></div></div></div>
+          <div class="skill-item"><div class="skill-row"><span class="skill-name">Content &amp; Data</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-tooltip">Documentation, coordination &amp; data management</div><div class="skill-fill" style="width:75%"></div></div></div>
         </div>
         <div class="card">
           <div class="section-head"><span>&#11088;</span><h3>Focus Areas</h3></div>
@@ -453,326 +556,286 @@
           <div class="achievement-item"><div class="achievement-icon">&#128100;</div><div class="achievement-title">17-Member Team</div><div class="achievement-sub">Growing Engineering Network</div></div>
         </div>
       </div>
-
       <div class="quote-card">
         <div class="quote-text">Discipline today, leadership tomorrow, impact forever.</div>
         <div class="quote-author">&mdash; Krenox Tech &amp; Engineering Team</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div style="padding:0 4vw 2rem;max-width:1400px;margin:0 auto;">
-    <div class="services-bar">
-      <div class="services-label">Our Services</div>
-      <div class="services-items">
-        <a class="service-link" href="#">&#128100; Mentorship</a>
-        <a class="service-link" href="#">&#128172; Consulting</a>
-        <a class="service-link" href="#">&#127891; Training</a>
-        <a class="service-link" href="#">&#128188; Internship</a>
-        <a class="service-link" href="#">&#127758; Network</a>
-        <a class="service-link" href="#">&#128235; Support</a>
+<!-- ============================= SERVICES ============================= -->
+<div id="services" class="page-section">
+  <div class="services-section">
+    <div class="services-hero">
+      <h2>What We Offer</h2>
+      <p>From aerospace design to digital innovation, Krenox delivers engineering expertise, mentorship, and collaborative solutions tailored for students, startups, and organizations.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon-wrap">&#127891;</div>
+        <div class="service-title">Technical Mentorship</div>
+        <div class="service-desc">Personalized guidance from experienced engineers across aerospace, software, embedded systems, and design. We help students and early-career professionals navigate technical challenges and accelerate their growth.</div>
+        <div class="service-tags"><span class="service-tag">Aerospace</span><span class="service-tag">Software</span><span class="service-tag">CAD</span><span class="service-tag">Embedded</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
       </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#128187;</div>
+        <div class="service-title">Software Development</div>
+        <div class="service-desc">Full-stack web applications, backend APIs, mobile-responsive platforms, and engineering management tools. We build scalable, functional digital products using React, Node.js, Python, and modern web technologies.</div>
+        <div class="service-tags"><span class="service-tag">React</span><span class="service-tag">Node.js</span><span class="service-tag">Python</span><span class="service-tag">Full Stack</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#9992;</div>
+        <div class="service-title">Aerospace CAD Design</div>
+        <div class="service-desc">Professional aerospace design work including airfoil modeling, structural analysis, component prototyping, and aerodynamic geometry refinement using CATIA, SolidWorks, and AutoCAD.</div>
+        <div class="service-tags"><span class="service-tag">CATIA</span><span class="service-tag">SolidWorks</span><span class="service-tag">AutoCAD</span><span class="service-tag">Airfoil</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#128268;</div>
+        <div class="service-title">Embedded Systems &amp; IoT</div>
+        <div class="service-desc">Hardware programming, sensor integration, and smart automation systems. From ESP32-based proximity alerts to robotics hardware, we design and deploy intelligent embedded solutions.</div>
+        <div class="service-tags"><span class="service-tag">ESP32</span><span class="service-tag">Arduino</span><span class="service-tag">Robotics</span><span class="service-tag">IoT</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#127912;</div>
+        <div class="service-title">UI/UX Design</div>
+        <div class="service-desc">Visually engaging, user-centred digital interfaces for engineering platforms, apps, and websites. We combine technical understanding with design principles to build experiences that are both functional and beautiful.</div>
+        <div class="service-tags"><span class="service-tag">Figma</span><span class="service-tag">Prototyping</span><span class="service-tag">User Research</span><span class="service-tag">Interface Design</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#128203;</div>
+        <div class="service-title">QA &amp; Technical Testing</div>
+        <div class="service-desc">Structured quality assurance for engineering software and systems. We evaluate performance, identify failure points, and deliver detailed technical reports that help teams ship reliable products.</div>
+        <div class="service-tags"><span class="service-tag">Test Plans</span><span class="service-tag">Bug Tracking</span><span class="service-tag">System Evaluation</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#128172;</div>
+        <div class="service-title">Engineering Consulting</div>
+        <div class="service-desc">Technical consultation for student-led projects, startups, and organizations seeking aerospace or software engineering guidance. We review designs, evaluate feasibility, and recommend structured solutions.</div>
+        <div class="service-tags"><span class="service-tag">Design Review</span><span class="service-tag">Feasibility</span><span class="service-tag">Technical Strategy</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#128218;</div>
+        <div class="service-title">Technical Training &amp; Workshops</div>
+        <div class="service-desc">Hands-on training sessions covering CAD tools, programming fundamentals, embedded systems, and aerospace concepts. Designed for beginners and intermediate learners looking to build practical skills.</div>
+        <div class="service-tags"><span class="service-tag">CAD Training</span><span class="service-tag">Programming</span><span class="service-tag">Workshops</span><span class="service-tag">Aerospace 101</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">&#127758;</div>
+        <div class="service-title">Community &amp; Networking</div>
+        <div class="service-desc">Connect with a growing community of engineers and tech enthusiasts. Through events, tech talks, hackathons, and showcases, Krenox provides a collaborative ecosystem for networking and collaborative growth.</div>
+        <div class="service-tags"><span class="service-tag">Events</span><span class="service-tag">Tech Talks</span><span class="service-tag">Hackathons</span><span class="service-tag">Networking</span></div>
+        <a class="service-cta" href="#">Learn more ›</a>
+      </div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="services-process">
+      <div class="process-title">How We Work</div>
+      <div class="process-steps">
+        <div class="process-step"><div class="step-num">01</div><div class="step-title">Reach Out</div><div class="step-desc">Contact us with your project idea or need. We review every request carefully.</div></div>
+        <div class="process-step"><div class="step-num">02</div><div class="step-title">Discovery</div><div class="step-desc">We understand your goals, scope, timeline, and technical requirements.</div></div>
+        <div class="process-step"><div class="step-num">03</div><div class="step-title">Build &amp; Execute</div><div class="step-desc">Our team gets to work — designing, developing, or training as needed.</div></div>
+        <div class="process-step"><div class="step-num">04</div><div class="step-title">Deliver &amp; Support</div><div class="step-desc">We deliver quality results and remain available for follow-up support.</div></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="services-cta-band">
+      <h3>Ready to Work With Us?</h3>
+      <p>Whether you need a CAD design, a web platform, technical mentorship, or engineering support — Krenox has the expertise and passion to deliver.</p>
+      <span class="cta-btn" onclick="alert('Contact form coming soon! Reach us at hello@krenox.com')">Get In Touch</span>
     </div>
   </div>
 </div>
 
-<!-- ===== TEAM PAGE ===== -->
+<!-- ============================= TEAM ============================= -->
 <div id="team" class="page-section">
   <div class="team-section">
     <div class="team-section-title">&#128100; Meet the Team</div>
     <div class="team-sub">17 engineers across aerospace, software, design, embedded systems, and quality assurance.</div>
 
+    <!-- CONTROLS -->
+    <div class="team-controls">
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="searchInput" placeholder="Search by name, role or skill…" oninput="filterTeam()"/>
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">All</button>
+        <button class="filter-btn" data-filter="dev" onclick="setFilter(this,'dev')">Developers</button>
+        <button class="filter-btn" data-filter="aerospace" onclick="setFilter(this,'aerospace')">Aerospace</button>
+        <button class="filter-btn" data-filter="qa" onclick="setFilter(this,'qa')">QA &amp; Testing</button>
+        <button class="filter-btn" data-filter="design" onclick="setFilter(this,'design')">Design</button>
+        <button class="filter-btn" data-filter="content" onclick="setFilter(this,'content')">Content</button>
+      </div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="role-legend">
+      <span class="legend-label">Roles:</span>
+      <div class="legend-item"><div class="legend-dot lead"></div> Leadership</div>
+      <div class="legend-item"><div class="legend-dot dev"></div> Developer</div>
+      <div class="legend-item"><div class="legend-dot aerospace"></div> Aerospace</div>
+      <div class="legend-item"><div class="legend-dot qa"></div> QA &amp; Testing</div>
+      <div class="legend-item"><div class="legend-dot design"></div> Design</div>
+      <div class="legend-item"><div class="legend-dot content"></div> Content</div>
+    </div>
+
     <!-- LEADERSHIP BANNER -->
-    <div class="leadership-banner">
-      <!-- Team Lead -->
-      <div class="lead-profile-card team-lead" onclick="openModal('samuel')">
+    <div class="leadership-banner" id="leadershipBanner">
+      <div class="lead-profile-card team-lead" onclick="openModal('samuel')" data-search="samuel okusanya lead aerospace robotics embedded react nodejs">
         <div class="lead-rank">&#128081;</div>
         <div class="lead-av-lg gold">SO</div>
         <div>
           <div class="lead-name">Samuel Okusanya Ayodeji</div>
           <div class="lead-title-badge gold">&#128081; Team Lead</div>
-          <div class="lead-dept">Aerospace Engineering · Robotics · Embedded Systems · Web Dev</div>
-          <div class="lead-tags">
-            <span class="lead-tag gold">React</span>
-            <span class="lead-tag gold">Node.js</span>
-            <span class="lead-tag gold">ESP32</span>
-            <span class="lead-tag gold">CAD</span>
-            <span class="lead-tag gold">Astrodynamics</span>
-          </div>
-          <div class="lead-link-row">
-            <span class="lead-link gold">View Profile ›</span>
-          </div>
+          <div class="lead-dept">Aerospace · Robotics · Embedded Systems · Web Dev</div>
+          <div class="lead-tags"><span class="lead-tag gold">React</span><span class="lead-tag gold">Node.js</span><span class="lead-tag gold">ESP32</span><span class="lead-tag gold">CAD</span><span class="lead-tag gold">Astrodynamics</span></div>
+          <div class="lead-link-row"><span class="lead-link gold">View Profile ›</span></div>
         </div>
       </div>
-      <!-- Asst Lead -->
-      <div class="lead-profile-card asst-lead" onclick="openModal('nosa')">
+      <div class="lead-profile-card asst-lead" onclick="openModal('nosa')" data-search="nosa praise asst lead aerospace avionics uiux figma python catia">
         <div class="lead-rank">&#11088;</div>
         <div class="lead-av-lg cyan">NP</div>
         <div>
           <div class="lead-name">Nosa Praise</div>
           <div class="lead-title-badge cyan">&#11088; Assistant Team Lead</div>
-          <div class="lead-dept">Aerospace Engineering · Avionics · UI/UX Design</div>
-          <div class="lead-tags">
-            <span class="lead-tag cyan">CATIA</span>
-            <span class="lead-tag cyan">Python</span>
-            <span class="lead-tag cyan">Figma</span>
-            <span class="lead-tag cyan">Circuit Wizard</span>
-          </div>
-          <div class="lead-link-row">
-            <a class="lead-link cyan" href="https://www.linkedin.com/in/praise-nosa-464507350" target="_blank">LinkedIn</a>
-            <span class="lead-link cyan">View Profile ›</span>
-          </div>
+          <div class="lead-dept">Aerospace · Avionics · UI/UX Design</div>
+          <div class="lead-tags"><span class="lead-tag cyan">CATIA</span><span class="lead-tag cyan">Python</span><span class="lead-tag cyan">Figma</span><span class="lead-tag cyan">Circuit Wizard</span></div>
+          <div class="lead-link-row"><a class="lead-link cyan" href="https://www.linkedin.com/in/praise-nosa-464507350" target="_blank">LinkedIn</a><span class="lead-link cyan">View Profile ›</span></div>
         </div>
       </div>
     </div>
 
-    <div class="team-divider">Core Team Members</div>
+    <div class="team-divider" id="coreDivider">Core Team Members</div>
 
-    <div class="team-grid">
+    <div class="team-grid" id="teamGrid">
+      <div class="no-results" id="noResults">No members match your search or filter.</div>
 
-      <!-- Obi Christabel -->
-      <div class="member-card" onclick="openModal('christabel')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">OC</div></div>
-          <div><div class="member-name">Obi Christabel N.</div><div class="member-role-badge">QA &amp; Testing</div><div class="member-dept">Structures · Flight Mechanics</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aerospace engineering enthusiast passionate about structural mechanics, developing safe and high-performance aerospace systems using CATIA, SolidWorks, and Arduino.</p>
-          <div class="member-tags"><span class="member-tag">CATIA</span><span class="member-tag">SolidWorks</span><span class="member-tag">Arduino</span><span class="member-tag">VS Code</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <!-- Each card has data-role and data-search for filtering -->
+      <div class="member-card" data-role="qa aerospace" data-search="obi christabel structures flight mechanics catia solidworks arduino qa" onclick="openModal('christabel')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">OC</div></div><div><div class="member-name">Obi Christabel N.</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div class="member-dept">Structures · Flight Mechanics</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aerospace engineering enthusiast passionate about structural mechanics and developing safe, high-performance aerospace systems using CATIA, SolidWorks, and Arduino.</p><div class="member-tags"><span class="member-tag">CATIA</span><span class="member-tag">SolidWorks</span><span class="member-tag">Arduino</span><span class="member-tag">VS Code</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Golit Angel -->
-      <div class="member-card" onclick="openModal('golit')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">GA</div></div>
-          <div><div class="member-name">Golit Angel N.</div><div class="member-role-badge">Content &amp; Data</div><div class="member-dept">Aerodynamics · Control Systems</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Passionate about aerospace engineering with interests in aerodynamics and control systems. Motivated to contribute to aviation innovation while developing CAD and simulation skills.</p>
-          <div class="member-tags"><span class="member-tag">CAD</span><span class="member-tag">Simulation</span><span class="member-tag">Programming</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="content aerospace" data-search="golit angel aerodynamics control systems cad simulation content data" onclick="openModal('golit')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">GA</div></div><div><div class="member-name">Golit Angel N.</div><div class="member-role-badge badge-content">Content &amp; Data</div><div class="member-dept">Aerodynamics · Control Systems</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Passionate about aerospace engineering with interests in aerodynamics and control systems. Motivated to advance aviation innovation while developing CAD and simulation skills.</p><div class="member-tags"><span class="member-tag">CAD</span><span class="member-tag">Simulation</span><span class="member-tag">Programming</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Kuye Enoch -->
-      <div class="member-card" onclick="openModal('enoch')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">KE</div></div>
-          <div><div class="member-name">Kuye Enoch Abiodun</div><div class="member-role-badge">QA &amp; Testing</div><div class="member-dept">Aircraft Design · Manufacturing</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Designed a NACA 2411 airfoil wing model in CATIA, involving spanwise sections and aerodynamic geometry refinement using multi-section solid tools.</p>
-          <div class="member-tags"><span class="member-tag">CATIA</span><span class="member-tag">AutoCAD</span><span class="member-tag">NACA 2411</span><span class="member-tag">Wing Design</span></div>
-          <div class="member-links">
-            <a class="member-link-btn" href="https://www.linkedin.com/in/enoch-kuye-537344348" target="_blank">LinkedIn</a>
-            <a class="member-link-btn" href="https://www.instagram.com/kuyeenoch" target="_blank">Instagram</a>
-            <span class="member-link-btn view-profile-btn">View Profile</span>
-          </div>
-        </div>
+      <div class="member-card" data-role="qa aerospace" data-search="kuye enoch aircraft design manufacturing catia autocad naca 2411 wing qa" onclick="openModal('enoch')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">KE</div></div><div><div class="member-name">Kuye Enoch Abiodun</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div class="member-dept">Aircraft Design · Manufacturing</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Designed a NACA 2411 airfoil wing model in CATIA involving spanwise sections and aerodynamic geometry refinement using multi-section solid tools.</p><div class="member-tags"><span class="member-tag">CATIA</span><span class="member-tag">AutoCAD</span><span class="member-tag">NACA 2411</span><span class="member-tag">Wing Design</span></div><div class="member-links"><a class="member-link-btn" href="https://www.linkedin.com/in/enoch-kuye-537344348" target="_blank">LinkedIn</a><a class="member-link-btn" href="https://www.instagram.com/kuyeenoch" target="_blank">Instagram</a><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Aniefiok -->
-      <div class="member-card" onclick="openModal('aniefiok')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AI</div></div>
-          <div><div class="member-name">Aniefiok D. Iyene</div><div class="member-role-badge">Content &amp; Docs</div><div class="member-dept">Aerodynamics · Avionics · Flight Mechanics</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aspiring aerospace engineer interested in aircraft systems and engineering analysis. Committed to collaborative learning and contributing through content coordination and technical documentation.</p>
-          <div class="member-tags"><span class="member-tag">Programming</span><span class="member-tag">Engineering Tools</span><span class="member-tag">Documentation</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="content aerospace" data-search="aniefiok dominion iyene aerodynamics avionics flight mechanics documentation content" onclick="openModal('aniefiok')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AI</div></div><div><div class="member-name">Aniefiok D. Iyene</div><div class="member-role-badge badge-content">Content &amp; Docs</div><div class="member-dept">Aerodynamics · Avionics</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aspiring aerospace engineer interested in aircraft systems and engineering analysis. Supports Krenox through content coordination and technical documentation.</p><div class="member-tags"><span class="member-tag">Programming</span><span class="member-tag">Engineering Tools</span><span class="member-tag">Documentation</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Anka Muhammad -->
-      <div class="member-card" onclick="openModal('anka')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AM</div></div>
-          <div><div class="member-name">Anka Muhammad Mariya</div><div class="member-role-badge">Content &amp; QA</div><div class="member-dept">Aerodynamics · Systems Dev</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Passionate about aerospace innovation and engineering collaboration. Eager to contribute to meaningful engineering projects through content coordination, project support, and quality assurance.</p>
-          <div class="member-tags"><span class="member-tag">Content Coord</span><span class="member-tag">QA Support</span><span class="member-tag">Engineering</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="content qa" data-search="anka muhammad mariya aerodynamics systems content coordination qa support" onclick="openModal('anka')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AM</div></div><div><div class="member-name">Anka Muhammad Mariya</div><div class="member-role-badge badge-content">Content &amp; QA</div><div class="member-dept">Aerodynamics · Systems Dev</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Passionate about aerospace innovation and engineering collaboration. Contributes through content coordination, project support, and quality assurance activities.</p><div class="member-tags"><span class="member-tag">Content Coord</span><span class="member-tag">QA Support</span><span class="member-tag">Engineering</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Adebamiji Precious -->
-      <div class="member-card" onclick="openModal('precious')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AP</div></div>
-          <div><div class="member-name">Adebamiji O. Precious</div><div class="member-role-badge">UI/UX &amp; Content</div><div class="member-dept">Design · UX · Digital Systems</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Engineering enthusiast passionate about combining engineering concepts with visually engaging and user-friendly digital systems. Interested in UI/UX design and collaborative project development.</p>
-          <div class="member-tags"><span class="member-tag">UI/UX Design</span><span class="member-tag">Content Coord</span><span class="member-tag">Creative Design</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="design content" data-search="adebamiji odunayo precious uiux design content creative digital systems" onclick="openModal('precious')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AP</div></div><div><div class="member-name">Adebamiji O. Precious</div><div class="member-role-badge badge-design">UI/UX &amp; Content</div><div class="member-dept">Design · UX · Digital Systems</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Engineering enthusiast passionate about combining engineering concepts with visually engaging and user-friendly digital systems. Interested in UI/UX design and collaborative project development.</p><div class="member-tags"><span class="member-tag">UI/UX Design</span><span class="member-tag">Content Coord</span><span class="member-tag">Creative Design</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Adakole Esther -->
-      <div class="member-card" onclick="openModal('esther')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AE</div></div>
-          <div><div class="member-name">Adakole O. Esther</div><div class="member-role-badge">Frontend Dev</div><div class="member-dept">Aerospace · Frontend · Design</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aspiring aerospace engineer with a growing interest in frontend development. Focused on digital innovation, interface structure, and contributing to collaborative engineering environments.</p>
-          <div class="member-tags"><span class="member-tag">Frontend Dev</span><span class="member-tag">UI Design</span><span class="member-tag">Content Coord</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="dev" data-search="adakole onyemowo esther frontend aerospace digital innovation interface" onclick="openModal('esther')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AE</div></div><div><div class="member-name">Adakole O. Esther</div><div class="member-role-badge badge-dev">Frontend Dev</div><div class="member-dept">Aerospace · Frontend · Design</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aspiring aerospace engineer with a growing interest in frontend development. Focused on digital innovation, interface structure, and collaborative engineering environments.</p><div class="member-tags"><span class="member-tag">Frontend Dev</span><span class="member-tag">UI Design</span><span class="member-tag">Content Coord</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Fodio Ahmed -->
-      <div class="member-card" onclick="openModal('fodio')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">FA</div></div>
-          <div><div class="member-name">Fodio Ahmed Shinkafi</div><div class="member-role-badge">QA &amp; Testing</div><div class="member-dept">Aerospace Systems · Engineering Analysis</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Motivated by contributing to impactful engineering solutions while improving technical and analytical skills. Enthusiastic about testing, quality assurance, and structured technical evaluation.</p>
-          <div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Engineering Analysis</span><span class="member-tag">Team Collaboration</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="qa aerospace" data-search="fodio ahmed shinkafi aerospace systems engineering analysis qa testing" onclick="openModal('fodio')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">FA</div></div><div><div class="member-name">Fodio Ahmed Shinkafi</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div class="member-dept">Aerospace Systems · Analysis</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Motivated by contributing to impactful engineering solutions. Enthusiastic about testing, quality assurance, and structured technical evaluation.</p><div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Engineering Analysis</span><span class="member-tag">Collaboration</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Adebisi Ibrahim -->
-      <div class="member-card" onclick="openModal('adebisi')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AO</div></div>
-          <div><div class="member-name">Adebisi Ibrahim O.</div><div class="member-role-badge">Full Stack Dev</div><div class="member-dept">Frontend · Backend · Systems</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aspiring software and aerospace systems developer passionate about building scalable digital platforms. Interested in web technologies, collaborative engineering systems, and technical problem-solving.</p>
-          <div class="member-tags"><span class="member-tag">Frontend</span><span class="member-tag">Backend</span><span class="member-tag">Web Tech</span><span class="member-tag">Systems</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="dev" data-search="adebisi ibrahim oloruntomi frontend backend fullstack web systems integration" onclick="openModal('adebisi')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AO</div></div><div><div class="member-name">Adebisi Ibrahim O.</div><div class="member-role-badge badge-dev">Full Stack Dev</div><div class="member-dept">Frontend · Backend · Systems</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aspiring software and aerospace systems developer passionate about building scalable digital platforms. Interested in web technologies, collaborative engineering systems, and technical problem-solving.</p><div class="member-tags"><span class="member-tag">Frontend</span><span class="member-tag">Backend</span><span class="member-tag">Web Tech</span><span class="member-tag">Systems</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Muhammad Nur -->
-      <div class="member-card" onclick="openModal('muhammadnur')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">MN</div></div>
-          <div><div class="member-name">Muhammad Nur S. Aliyu</div><div class="member-role-badge">QA &amp; Testing</div><div class="member-dept">Engineering Collaboration · Aerospace</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Passionate about engineering collaboration, aerospace innovation, and technical problem-solving. Committed to improving engineering skills and contributing to quality assurance workflows.</p>
-          <div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Aerospace</span><span class="member-tag">Engineering</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="qa aerospace" data-search="muhammad nur sanusi aliyu aerospace engineering collaboration qa testing" onclick="openModal('muhammadnur')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">MN</div></div><div><div class="member-name">Muhammad Nur S. Aliyu</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div class="member-dept">Engineering Collaboration</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Passionate about engineering collaboration and aerospace innovation. Committed to improving skills and contributing to quality assurance and organized engineering workflows.</p><div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Aerospace</span><span class="member-tag">Engineering</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- David Destiny -->
-      <div class="member-card" onclick="openModal('david')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">DN</div></div>
-          <div><div class="member-name">David Destiny Netyang</div><div class="member-role-badge">Content Coord</div><div class="member-dept">Systems Organization · Tech Coordination</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Engineering enthusiast with interests in teamwork, technical coordination, and systems organization. Passionate about contributing to projects that encourage innovation and structured development.</p>
-          <div class="member-tags"><span class="member-tag">Content Coord</span><span class="member-tag">Testing</span><span class="member-tag">Communication</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="content" data-search="david destiny netyang content coordination systems organization technical teamwork" onclick="openModal('david')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">DN</div></div><div><div class="member-name">David Destiny Netyang</div><div class="member-role-badge badge-content">Content Coord</div><div class="member-dept">Systems Organization · Coordination</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Engineering enthusiast with interests in teamwork, technical coordination, and systems organization. Passionate about contributing to innovative, structured development projects.</p><div class="member-tags"><span class="member-tag">Content Coord</span><span class="member-tag">Testing</span><span class="member-tag">Communication</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Akor Faith -->
-      <div class="member-card" onclick="openModal('faith')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AF</div></div>
-          <div><div class="member-name">Akor Faith Afolabi</div><div class="member-role-badge">Frontend Dev</div><div class="member-dept">Frontend · Digital Systems · Engineering</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aspiring engineer with interests in frontend technologies, digital systems, and engineering collaboration. Focused on building strong technical and communication skills within engineering platforms.</p>
-          <div class="member-tags"><span class="member-tag">Frontend Dev</span><span class="member-tag">Digital Systems</span><span class="member-tag">QA Support</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="dev" data-search="akor faith afolabi frontend digital systems engineering collaboration" onclick="openModal('faith')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AF</div></div><div><div class="member-name">Akor Faith Afolabi</div><div class="member-role-badge badge-dev">Frontend Dev</div><div class="member-dept">Frontend · Digital Systems</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aspiring engineer with interests in frontend technologies, digital systems, and engineering collaboration. Focused on building strong technical and communication skills.</p><div class="member-tags"><span class="member-tag">Frontend Dev</span><span class="member-tag">Digital Systems</span><span class="member-tag">QA Support</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Tagang Philemon -->
-      <div class="member-card" onclick="openModal('tagang')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">TP</div></div>
-          <div><div class="member-name">Tagang Philemon Jerry</div><div class="member-role-badge">QA &amp; Testing</div><div class="member-dept">Engineering Systems · Technical Support</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Passionate about engineering systems, technical growth, and collaborative innovation. Motivated by the opportunity to contribute to projects that promote creativity, structure, and practical problem-solving.</p>
-          <div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Project Support</span><span class="member-tag">Engineering</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="qa" data-search="tagang philemon jerry engineering systems qa testing project support" onclick="openModal('tagang')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">TP</div></div><div><div class="member-name">Tagang Philemon Jerry</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div class="member-dept">Engineering Systems · Support</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Passionate about engineering systems and collaborative innovation. Motivated by contributing to projects that promote creativity, structure, and practical problem-solving through quality assurance.</p><div class="member-tags"><span class="member-tag">QA Testing</span><span class="member-tag">Project Support</span><span class="member-tag">Engineering</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Al-Amin -->
-      <div class="member-card" onclick="openModal('alamin')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">AA</div></div>
-          <div><div class="member-name">Al-Amin Ayo-Adeyemi</div><div class="member-role-badge">Engineering Member</div><div class="member-dept">Aerospace · Innovation · Technical Dev</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Aspiring aerospace engineer focused on improving engineering knowledge while participating in collaborative technical environments that encourage creativity and practical learning.</p>
-          <div class="member-tags"><span class="member-tag">Aerospace</span><span class="member-tag">Engineering</span><span class="member-tag">Innovation</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="aerospace" data-search="al-amin ayo-adeyemi aerospace engineering innovation technical development" onclick="openModal('alamin')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">AA</div></div><div><div class="member-name">Al-Amin Ayo-Adeyemi</div><div class="member-role-badge badge-aerospace">Engineering Member</div><div class="member-dept">Aerospace · Innovation</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Aspiring aerospace engineer focused on improving engineering knowledge while participating in collaborative technical environments that encourage creativity and practical learning.</p><div class="member-tags"><span class="member-tag">Aerospace</span><span class="member-tag">Engineering</span><span class="member-tag">Innovation</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
-      <!-- Oladosu Emmanuel -->
-      <div class="member-card" onclick="openModal('emmanuel')">
-        <div class="member-card-header">
-          <div class="member-avatar"><div class="member-avatar-placeholder">OE</div></div>
-          <div><div class="member-name">Oladosu Emmanuel A.</div><div class="member-role-badge">Backend Dev</div><div class="member-dept">Backend Systems · Software Engineering</div></div>
-        </div>
-        <div class="member-card-body">
-          <p class="member-bio">Passionate about backend systems, engineering software, and technical problem-solving. Focused on developing scalable systems that support engineering collaboration and digital innovation.</p>
-          <div class="member-tags"><span class="member-tag">Backend Dev</span><span class="member-tag">Systems Integration</span><span class="member-tag">QA Support</span></div>
-          <div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div>
-        </div>
+      <div class="member-card" data-role="dev" data-search="oladosu emmanuel ajibola backend systems software engineering integration" onclick="openModal('emmanuel')">
+        <div class="online-dot"></div>
+        <div class="member-card-header"><div class="member-avatar"><div class="member-avatar-placeholder">OE</div></div><div><div class="member-name">Oladosu Emmanuel A.</div><div class="member-role-badge badge-dev">Backend Dev</div><div class="member-dept">Backend Systems · Software Eng.</div></div></div>
+        <div class="member-card-body"><p class="member-bio">Passionate about backend systems and technical problem-solving. Focused on developing scalable systems that support engineering collaboration and digital innovation.</p><div class="member-tags"><span class="member-tag">Backend Dev</span><span class="member-tag">Systems Integration</span><span class="member-tag">QA Support</span></div><div class="member-links"><span class="member-link-btn view-profile-btn">View Profile</span></div></div>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- ===== MODALS ===== -->
-
-<!-- Samuel Modal (Team Lead) -->
+<!-- ============================= MODALS ============================= -->
 <div id="modal-samuel" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModal('samuel')">&#10005;</div>
-    <div class="modal-header gold-header">
-      <div class="modal-avatar gold-av"><div class="modal-avatar-placeholder gold-text">SO</div></div>
-      <div>
-        <div style="font-size:1.4rem;margin-bottom:0.3rem">&#128081;</div>
-        <div class="modal-name">Samuel Okusanya Ayodeji</div>
-        <div class="lead-title-badge gold">Team Lead &mdash; Krenox</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace &bull; Robotics &bull; Embedded Systems &bull; Web Dev</div>
-      </div>
-    </div>
+  <div class="modal"><div class="modal-close" onclick="closeModal('samuel')">&#10005;</div>
+    <div class="modal-header gold-header"><div class="modal-avatar gold-av"><div class="modal-avatar-placeholder gold-text">SO</div></div><div><div style="font-size:1.4rem;margin-bottom:0.3rem">&#128081;</div><div class="modal-name">Samuel Okusanya Ayodeji</div><div class="lead-title-badge gold">Team Lead &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace · Robotics · Embedded Systems · Web Dev</div></div></div>
     <div class="modal-body">
-      <div class="modal-section"><h4>&#128100; About</h4><p>Samuel Okusanya Ayodeji is a 300-level Aerospace Engineering student and the Team Lead of Krenox. He has a strong interest in astrodynamics, embedded systems, robotics, and aerospace innovation, and is passionate about solving transportation and engineering challenges through intelligent systems and autonomous technologies.</p></div>
+      <div class="modal-section"><h4>&#128100; About</h4><p>Samuel Okusanya Ayodeji is a 300-level Aerospace Engineering student and the Team Lead of Krenox. He has a strong interest in astrodynamics, embedded systems, robotics, and aerospace innovation, passionate about solving engineering challenges through intelligent systems and autonomous technologies.</p></div>
       <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">React</span><span class="modal-tag">Node.js</span><span class="modal-tag">ESP32</span><span class="modal-tag">CAD</span><span class="modal-tag">Python</span><span class="modal-tag">Robotics</span><span class="modal-tag">Data Analytics</span><span class="modal-tag">Web Development</span></div></div>
-      <div class="modal-section"><h4>&#128203; Projects</h4><p>Built a smart door alert proximity system using ESP32, designed aircraft wings using CAD tools, and leads engineering collaboration and community development through Krenox. Currently developing skills in React, Node.js, and data analytics.</p></div>
-      <div class="modal-section"><h4>&#127919; Career Goals</h4><p>Working toward building impactful engineering systems and collaborative innovation platforms that bridge aerospace engineering with software and autonomous technology solutions.</p></div>
+      <div class="modal-section"><h4>&#128203; Projects</h4><p>Built a smart door alert proximity system using ESP32, designed aircraft wings using CAD tools, and leads engineering collaboration through Krenox. Currently developing skills in React, Node.js, and data analytics.</p></div>
+      <div class="modal-section"><h4>&#127919; Career Goals</h4><p>Building impactful engineering systems and collaborative innovation platforms that bridge aerospace engineering with software and autonomous technology solutions.</p></div>
     </div>
   </div>
 </div>
 
-<!-- Nosa Praise Modal (Asst Lead) -->
 <div id="modal-nosa" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModal('nosa')">&#10005;</div>
-    <div class="modal-header cyan-header">
-      <div class="modal-avatar cyan-av"><div class="modal-avatar-placeholder cyan-text">NP</div></div>
-      <div>
-        <div style="font-size:1.2rem;margin-bottom:0.3rem">&#11088;</div>
-        <div class="modal-name">Nosa Praise</div>
-        <div class="lead-title-badge cyan">Asst. Team Lead &mdash; UI/UX Designer</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace &bull; Avionics &bull; Electronics</div>
-      </div>
-    </div>
+  <div class="modal"><div class="modal-close" onclick="closeModal('nosa')">&#10005;</div>
+    <div class="modal-header cyan-header"><div class="modal-avatar cyan-av"><div class="modal-avatar-placeholder cyan-text">NP</div></div><div><div style="font-size:1.2rem;margin-bottom:0.3rem">&#11088;</div><div class="modal-name">Nosa Praise</div><div class="lead-title-badge cyan">Asst. Team Lead · UI/UX Designer</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace · Avionics · Electronics</div></div></div>
     <div class="modal-body">
-      <div class="modal-section"><h4>&#128100; About</h4><p>Nosa Praise is the Assistant Team Lead of Krenox and an aspiring aerospace professional with strong interests in aerodynamics, avionics, and control systems. He is passionate about specializing in the electronics and avionics aspect of aerospace engineering, with a focus on integrating technology into advanced aviation systems.</p></div>
-      <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">CATIA</span><span class="modal-tag">Circuit Wizard</span><span class="modal-tag">Python</span><span class="modal-tag">Figma</span><span class="modal-tag">CAD Design</span><span class="modal-tag">Embedded Systems</span><span class="modal-tag">UI/UX Design</span></div></div>
+      <div class="modal-section"><h4>&#128100; About</h4><p>Nosa Praise is the Assistant Team Lead of Krenox and an aspiring aerospace professional with strong interests in aerodynamics, avionics, and control systems. Passionate about integrating technology into advanced aviation systems.</p></div>
+      <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">CATIA</span><span class="modal-tag">Circuit Wizard</span><span class="modal-tag">Python</span><span class="modal-tag">Figma</span><span class="modal-tag">Embedded Systems</span><span class="modal-tag">UI/UX Design</span></div></div>
       <div class="modal-section"><h4>&#128203; Projects</h4><p>Worked on a sustainability-focused app prototype at a tech camp hosted by Digital Peers International, exploring the intersection between digital technologies and environmental sustainability.</p></div>
       <div class="modal-section"><h4>&#127900; Hobbies</h4><div class="hobbies-grid"><span class="hobby-tag">Fashion Design</span><span class="hobby-tag">Badminton</span><span class="hobby-tag">Running</span><span class="hobby-tag">Reading</span><span class="hobby-tag">Sewing</span></div></div>
       <div class="modal-section"><h4>&#128279; Connect</h4><div class="modal-links"><a class="modal-link primary" href="https://www.linkedin.com/in/praise-nosa-464507350" target="_blank">LinkedIn</a><a class="modal-link" href="https://www.instagram.com/praiz.nosa" target="_blank">@praiz.nosa</a></div></div>
@@ -780,48 +843,33 @@
   </div>
 </div>
 
-<!-- Christabel Modal -->
 <div id="modal-christabel" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModal('christabel')">&#10005;</div>
-    <div class="modal-header default-header">
-      <div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">OC</div></div>
-      <div><div class="modal-name">Obi Christabel Nmesomachukwu</div><div class="member-role-badge">QA &amp; Testing &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace &bull; Structures &bull; Flight Mechanics</div></div>
-    </div>
+  <div class="modal"><div class="modal-close" onclick="closeModal('christabel')">&#10005;</div>
+    <div class="modal-header default-header"><div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">OC</div></div><div><div class="modal-name">Obi Christabel Nmesomachukwu</div><div class="member-role-badge badge-qa">QA &amp; Testing &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace · Structures · Flight Mechanics</div></div></div>
     <div class="modal-body">
-      <div class="modal-section"><h4>&#128100; About</h4><p>Aerospace engineering enthusiast with interests in aerodynamics, aerospace structures, and flight mechanics. Particularly passionate about structural mechanics and aims to contribute to the development of safe, efficient, and high-performance aerospace systems.</p></div>
+      <div class="modal-section"><h4>&#128100; About</h4><p>Aerospace engineering enthusiast with interests in aerodynamics, aerospace structures, and flight mechanics. Particularly passionate about structural mechanics, aiming to contribute to safe, efficient, and high-performance aerospace systems.</p></div>
       <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">CATIA</span><span class="modal-tag">SolidWorks</span><span class="modal-tag">Visual Studio Code</span><span class="modal-tag">Arduino</span><span class="modal-tag">Structural Analysis</span></div></div>
       <div class="modal-section"><h4>&#127900; Hobbies</h4><div class="hobbies-grid"><span class="hobby-tag">Fiction &amp; Non-Fiction</span><span class="hobby-tag">Football</span><span class="hobby-tag">Volleyball</span><span class="hobby-tag">Card Games</span></div></div>
     </div>
   </div>
 </div>
 
-<!-- Golit Modal -->
 <div id="modal-golit" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModal('golit')">&#10005;</div>
-    <div class="modal-header default-header">
-      <div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">GA</div></div>
-      <div><div class="modal-name">Golit Angel Nenzarmwa</div><div class="member-role-badge">Content &amp; Data Coordinator &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace &bull; Aerodynamics &bull; Control Systems</div></div>
-    </div>
+  <div class="modal"><div class="modal-close" onclick="closeModal('golit')">&#10005;</div>
+    <div class="modal-header default-header"><div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">GA</div></div><div><div class="modal-name">Golit Angel Nenzarmwa</div><div class="member-role-badge badge-content">Content &amp; Data Coordinator</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aerospace · Aerodynamics · Control Systems</div></div></div>
     <div class="modal-body">
-      <div class="modal-section"><h4>&#128100; About</h4><p>Passionate about aerospace engineering with interests in aerodynamics and control systems. Focused on building a strong foundation in engineering while developing technical skills in CAD, simulation, and programming. Motivated by the desire to contribute to advancements in aviation technology.</p></div>
+      <div class="modal-section"><h4>&#128100; About</h4><p>Passionate about aerospace engineering with interests in aerodynamics and control systems. Focused on building a strong foundation while developing technical skills in CAD, simulation, and programming.</p></div>
       <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">CAD</span><span class="modal-tag">Simulation</span><span class="modal-tag">Programming</span><span class="modal-tag">Data Coordination</span></div></div>
       <div class="modal-section"><h4>&#127900; Hobbies</h4><div class="hobbies-grid"><span class="hobby-tag">Reading</span><span class="hobby-tag">Sports</span><span class="hobby-tag">Movies</span></div></div>
     </div>
   </div>
 </div>
 
-<!-- Enoch Modal -->
 <div id="modal-enoch" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModal('enoch')">&#10005;</div>
-    <div class="modal-header default-header">
-      <div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">KE</div></div>
-      <div><div class="modal-name">Kuye Enoch Abiodun</div><div class="member-role-badge">QA &amp; Testing &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aircraft Design &bull; Manufacturing</div></div>
-    </div>
+  <div class="modal"><div class="modal-close" onclick="closeModal('enoch')">&#10005;</div>
+    <div class="modal-header default-header"><div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">KE</div></div><div><div class="modal-name">Kuye Enoch Abiodun</div><div class="member-role-badge badge-qa">QA &amp; Testing</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">Aircraft Design · Manufacturing</div></div></div>
     <div class="modal-body">
-      <div class="modal-section"><h4>&#128100; About</h4><p>Aspiring aerospace engineer with a strong passion for aircraft design and manufacturing. Driven by a passion for innovative aircraft development and engineering creativity.</p></div>
+      <div class="modal-section"><h4>&#128100; About</h4><p>Aspiring aerospace engineer with a strong passion for aircraft design and manufacturing, driven by innovative aircraft development and engineering creativity.</p></div>
       <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags"><span class="modal-tag">CATIA</span><span class="modal-tag">AutoCAD</span><span class="modal-tag">NACA Airfoil Design</span><span class="modal-tag">Aerodynamic Geometry</span></div></div>
       <div class="modal-section"><h4>&#128203; Featured Project</h4><p>Developed a wing model in CATIA using a NACA 2411 airfoil profile. Involved importing airfoil coordinates, generating spanwise sections, and refining geometry using multi-section solid tools to achieve smooth aerodynamic transitions.</p></div>
       <div class="modal-section"><h4>&#127900; Hobbies</h4><div class="hobbies-grid"><span class="hobby-tag">Music</span></div></div>
@@ -830,67 +878,110 @@
   </div>
 </div>
 
-<!-- Simple modals for remaining members -->
 <script>
-const simpleMembers = {
-  aniefiok: { name:'Aniefiok Dominion Iyene', role:'Content &amp; Technical Documentation', dept:'Aerodynamics · Avionics · Flight Mechanics', bio:'Aspiring aerospace engineer with interests in aircraft systems and engineering analysis. Committed to collaborative learning and engineering teamwork. Supports Krenox through content coordination and technical documentation.', tools:['Programming','Engineering Tools','Documentation','Collaboration'] },
-  anka: { name:'Anka Muhammad Mariya', role:'Content Coordinator &amp; QA', dept:'Aerodynamics · Systems Development', bio:'Passionate about aerospace innovation and engineering collaboration. Spans aerodynamics and systems development, eager to contribute to meaningful engineering projects through content coordination, project support, and quality assurance.', tools:['Content Coordination','QA Support','Project Support'] },
-  precious: { name:'Adebamiji Odunayo Precious', role:'UI/UX &amp; Content Coordinator', dept:'Design · UX · Digital Systems', bio:'Engineering enthusiast passionate about combining engineering concepts with visually engaging and user-friendly digital systems. Interested in UI/UX design, content coordination, and collaborative project development that improves user interaction.', tools:['UI/UX Design','Content Coordination','Creative Design','User Experience'] },
-  esther: { name:'Adakole Onyemowo Esther', role:'Frontend Developer', dept:'Aerospace · Frontend · Design', bio:'Aspiring aerospace engineer with a growing interest in frontend development and engineering technology systems. Passionate about digital innovation, interface structure, and technical coordination within collaborative engineering environments.', tools:['Frontend Dev','UI Design','Content Coordination','Interface Design'] },
-  fodio: { name:'Fodio Ahmed Shinkafi', role:'QA &amp; Testing', dept:'Aerospace Systems · Engineering Analysis', bio:'Interested in aerospace systems, engineering analysis, and collaborative project development. Motivated by contributing to impactful engineering solutions while improving technical and analytical skills through testing and quality assurance.', tools:['QA Testing','Engineering Analysis','Structured Evaluation','Team Collaboration'] },
-  adebisi: { name:'Adebisi Ibrahim Oloruntomi', role:'Full Stack Developer', dept:'Frontend · Backend · Systems', bio:'Aspiring software and aerospace systems developer passionate about building scalable digital platforms and improving programming capabilities. Interests include web technologies, collaborative engineering systems, and technical problem-solving.', tools:['Frontend Dev','Backend Dev','Web Technologies','Systems Integration','Testing'] },
-  muhammadnur: { name:'Muhammad Nur Sanusi Aliyu', role:'QA &amp; Testing', dept:'Engineering Collaboration · Aerospace', bio:'Passionate about engineering collaboration, aerospace innovation, and technical problem-solving. Committed to improving engineering skills and contributing meaningfully to testing systems, quality assurance, and organized engineering workflows.', tools:['QA Testing','Aerospace','Engineering Workflows','Team Collaboration'] },
-  david: { name:'David Destiny Netyang', role:'Content Coordinator', dept:'Systems Organization · Tech Coordination', bio:'Engineering enthusiast with interests in teamwork, technical coordination, and systems organization. Passionate about contributing to engineering projects that encourage innovation, collaboration, and structured development processes.', tools:['Content Coordination','Testing Support','Communication','Project Management'] },
-  faith: { name:'Akor Faith Afolabi', role:'Frontend Developer', dept:'Frontend · Digital Systems · Engineering', bio:'Aspiring engineer with interests in frontend technologies, digital systems, and engineering collaboration. Focused on building strong technical and communication skills while contributing to impactful engineering platforms.', tools:['Frontend Dev','Digital Systems','Testing Support','Engineering Collaboration'] },
-  tagang: { name:'Tagang Philemon Jerry', role:'QA &amp; Technical Support', dept:'Engineering Systems · Quality Assurance', bio:'Passionate about engineering systems, technical growth, and collaborative innovation. Motivated by the opportunity to contribute to engineering projects that promote creativity, structure, and practical problem-solving through quality assurance.', tools:['QA Testing','Project Testing','Technical Support','Engineering Systems'] },
-  alamin: { name:'Al-Amin Ayo-Adeyemi', role:'Engineering Member', dept:'Aerospace · Innovation · Technical Dev', bio:'Aspiring aerospace engineer focused on improving engineering knowledge while participating in collaborative technical environments that encourage creativity and practical learning. Enthusiastic about future contributions to engineering systems.', tools:['Aerospace','Engineering','Innovation','Technical Development'] },
-  emmanuel: { name:'Oladosu Emmanuel Ajibola', role:'Backend Developer', dept:'Backend Systems · Software Engineering', bio:'Passionate about backend systems, engineering software, and technical problem-solving. Interested in developing scalable systems that support engineering collaboration and digital innovation. Focused on backend development and systems integration.', tools:['Backend Dev','Systems Integration','Software Engineering','QA Support'] }
-};
+/* ---- SPLASH ---- */
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splash').classList.add('hide')},2000)});
 
-function openModal(id) {
-  const el = document.getElementById('modal-' + id);
-  if (el) { el.classList.add('open'); document.body.style.overflow='hidden'; return; }
-  // build simple modal
-  const m = simpleMembers[id];
-  if (!m) return;
-  const init = m.name.split(' ').map(w=>w[0]).join('').slice(0,2);
-  const tags = m.tools.map(t=>`<span class="modal-tag">${t}</span>`).join('');
-  const html = `<div id="modal-${id}" class="modal-overlay open">
-    <div class="modal">
-      <div class="modal-close" onclick="closeModal('${id}')">&#10005;</div>
-      <div class="modal-header default-header">
-        <div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">${init}</div></div>
-        <div><div class="modal-name">${m.name}</div><div class="member-role-badge">${m.role} &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">${m.dept}</div></div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section"><h4>&#128100; About</h4><p>${m.bio}</p></div>
-        <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags">${tags}</div></div>
-        <div class="modal-section"><h4>&#127919; Team Role</h4><p>${m.role} within the Krenox Tech &amp; Engineering Team.</p></div>
-      </div>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
-  document.getElementById('modal-' + id).addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
-  document.body.style.overflow='hidden';
-}
+/* ---- BACK TO TOP ---- */
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>300)});
 
-function closeModal(id) {
-  const el = document.getElementById('modal-' + id);
-  if (el) { el.classList.remove('open'); document.body.style.overflow=''; }
-}
+/* ---- THEME ---- */
+function toggleTheme(){document.body.classList.toggle('light')}
 
-function switchTab(id, el) {
+/* ---- HAMBURGER ---- */
+function toggleMenu(){document.getElementById('ham').classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')}
+function closeMobile(){document.getElementById('ham').classList.remove('open');document.getElementById('mobileMenu').classList.remove('open')}
+
+/* ---- TABS ---- */
+function switchTab(id,el){
   document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(b=>b.classList.remove('active'));
-  if (el && el.classList.contains('tab-btn')) el.classList.add('active');
-  if (el && el.tagName === 'A') el.classList.add('active');
+  document.querySelectorAll('.nav-links a,.mobile-menu a').forEach(b=>b.classList.remove('active'));
+  if(el&&el.classList&&el.classList.contains('tab-btn'))el.classList.add('active');
+  if(el&&el.tagName==='A')el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-document.querySelectorAll('.modal-overlay').forEach(m=>{
-  m.addEventListener('click', function(e){ if(e.target===this){ this.classList.remove('open'); document.body.style.overflow=''; } });
-});
+/* ---- FILTER & SEARCH ---- */
+let activeFilter='all';
+function setFilter(el,f){
+  activeFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  filterTeam();
+}
+function filterTeam(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const cards=document.querySelectorAll('#teamGrid .member-card');
+  const banner=document.getElementById('leadershipBanner');
+  const divider=document.getElementById('coreDivider');
+  let visible=0;
+  // Handle leadership banner visibility with search
+  const leadSearch=['samuel okusanya lead','nosa praise asst'];
+  const leadMatch=leadSearch.some(s=>s.includes(q))||q==='';
+  banner.style.display=(activeFilter==='all'||activeFilter==='dev'||activeFilter==='aerospace')&&leadMatch?'grid':'none';
+  divider.style.display=banner.style.display==='none'?'none':'flex';
+  cards.forEach(c=>{
+    const role=c.getAttribute('data-role')||'';
+    const search=c.getAttribute('data-search')||'';
+    const roleMatch=activeFilter==='all'||role.includes(activeFilter);
+    const searchMatch=q===''||search.includes(q);
+    const show=roleMatch&&searchMatch;
+    c.setAttribute('data-hidden',!show);
+    if(show){c.style.display='';visible++}else{c.style.display='none'}
+  });
+  document.getElementById('noResults').classList.toggle('show',visible===0&&!leadMatch);
+}
+
+/* ---- MODALS ---- */
+const simpleMembers={
+  aniefiok:{name:'Aniefiok Dominion Iyene',badge:'badge-content',role:'Content &amp; Technical Docs',dept:'Aerodynamics · Avionics · Flight Mechanics',bio:'Aspiring aerospace engineer with interests in aircraft systems and engineering analysis. Committed to collaborative learning and contributing through content coordination and technical documentation.',tools:['Programming','Engineering Tools','Documentation','Collaboration']},
+  anka:{name:'Anka Muhammad Mariya',badge:'badge-content',role:'Content Coordinator &amp; QA',dept:'Aerodynamics · Systems Development',bio:'Passionate about aerospace innovation and engineering collaboration. Spans aerodynamics and systems development, eager to contribute through content coordination, project support, and quality assurance.',tools:['Content Coordination','QA Support','Project Support','Aerospace']},
+  precious:{name:'Adebamiji Odunayo Precious',badge:'badge-design',role:'UI/UX &amp; Content Coordinator',dept:'Design · UX · Digital Systems',bio:'Engineering enthusiast passionate about combining engineering concepts with visually engaging and user-friendly digital systems. Interested in UI/UX design, content coordination, and collaborative project development.',tools:['UI/UX Design','Content Coordination','Creative Design','User Experience']},
+  esther:{name:'Adakole Onyemowo Esther',badge:'badge-dev',role:'Frontend Developer',dept:'Aerospace · Frontend · Design',bio:'Aspiring aerospace engineer with a growing interest in frontend development and engineering technology systems. Passionate about digital innovation, interface structure, and technical coordination.',tools:['Frontend Dev','UI Design','Content Coordination','Interface Design']},
+  fodio:{name:'Fodio Ahmed Shinkafi',badge:'badge-qa',role:'QA &amp; Testing',dept:'Aerospace Systems · Engineering Analysis',bio:'Interested in aerospace systems, engineering analysis, and collaborative project development. Enthusiastic about testing, quality assurance, and structured technical evaluation. Believes in teamwork and continuous technical growth.',tools:['QA Testing','Engineering Analysis','Structured Evaluation','Collaboration']},
+  adebisi:{name:'Adebisi Ibrahim Oloruntomi',badge:'badge-dev',role:'Full Stack Developer',dept:'Frontend · Backend · Systems',bio:'Aspiring software and aerospace systems developer passionate about building scalable digital platforms. Interests include web technologies, collaborative engineering systems, and technical problem-solving.',tools:['Frontend Dev','Backend Dev','Web Technologies','Systems Integration','Testing']},
+  muhammadnur:{name:'Muhammad Nur Sanusi Aliyu',badge:'badge-qa',role:'QA &amp; Testing',dept:'Engineering Collaboration · Aerospace',bio:'Passionate about engineering collaboration, aerospace innovation, and technical problem-solving. Committed to quality assurance, organized engineering workflows, and continuous technical growth.',tools:['QA Testing','Aerospace','Engineering Workflows','Collaboration']},
+  david:{name:'David Destiny Netyang',badge:'badge-content',role:'Content Coordinator',dept:'Systems Organization · Coordination',bio:'Engineering enthusiast with interests in teamwork, technical coordination, and systems organization. Passionate about contributing to engineering projects that encourage innovation and structured development.',tools:['Content Coordination','Testing Support','Communication','Project Management']},
+  faith:{name:'Akor Faith Afolabi',badge:'badge-dev',role:'Frontend Developer',dept:'Frontend · Digital Systems · Engineering',bio:'Aspiring engineer with interests in frontend technologies, digital systems, and engineering collaboration. Focused on building strong technical and communication skills within engineering platforms.',tools:['Frontend Dev','Digital Systems','Testing Support','Engineering Collaboration']},
+  tagang:{name:'Tagang Philemon Jerry',badge:'badge-qa',role:'QA &amp; Technical Support',dept:'Engineering Systems · Quality Assurance',bio:'Passionate about engineering systems, technical growth, and collaborative innovation. Motivated by contributing to projects promoting creativity, structure, and practical problem-solving through quality assurance.',tools:['QA Testing','Project Testing','Technical Support','Engineering Systems']},
+  alamin:{name:'Al-Amin Ayo-Adeyemi',badge:'badge-aerospace',role:'Engineering Member',dept:'Aerospace · Innovation · Technical Dev',bio:'Aspiring aerospace engineer focused on improving engineering knowledge while participating in collaborative technical environments that encourage creativity and practical learning.',tools:['Aerospace','Engineering','Innovation','Technical Development']},
+  emmanuel:{name:'Oladosu Emmanuel Ajibola',badge:'badge-dev',role:'Backend Developer',dept:'Backend Systems · Software Engineering',bio:'Passionate about backend systems, engineering software, and technical problem-solving. Focused on developing scalable systems supporting engineering collaboration and digital innovation.',tools:['Backend Dev','Systems Integration','Software Engineering','QA Support']}
+};
+
+function openModal(id){
+  const el=document.getElementById('modal-'+id);
+  if(el){el.classList.add('open');document.body.style.overflow='hidden';return}
+  const m=simpleMembers[id];if(!m)return;
+  const init=m.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+  const tags=m.tools.map(t=>`<span class="modal-tag">${t}</span>`).join('');
+  const html=`<div id="modal-${id}" class="modal-overlay open"><div class="modal">
+    <div class="modal-close" onclick="closeModal('${id}')">&#10005;</div>
+    <div class="modal-header default-header"><div class="modal-avatar def-av"><div class="modal-avatar-placeholder cyan-text">${init}</div></div>
+    <div><div class="modal-name">${m.name}</div><div class="member-role-badge ${m.badge}">${m.role} &mdash; Krenox</div><div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">${m.dept}</div></div></div>
+    <div class="modal-body">
+      <div class="modal-section"><h4>&#128100; About</h4><p>${m.bio}</p></div>
+      <div class="modal-section"><h4>&#9881; Skills &amp; Tools</h4><div class="modal-tags">${tags}</div></div>
+      <div class="modal-section"><h4>&#127919; Team Role</h4><p>${m.role} within the Krenox Tech &amp; Engineering Team.</p></div>
+    </div></div></div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+  document.getElementById('modal-'+id).addEventListener('click',function(e){if(e.target===this)closeModal(id)});
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){const el=document.getElementById('modal-'+id);if(el){el.classList.remove('open');document.body.style.overflow=''}}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',function(e){if(e.target===this){this.classList.remove('open');document.body.style.overflow=''}})});
+
+/* ---- PARTICLES ---- */
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');p.className='particle';
+    const s=Math.random()*3+1;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:0;animation-duration:${Math.random()*6+4}s;animation-delay:${Math.random()*5}s`;
+    c.appendChild(p);
+  }
+})();
 </script>
 </body>
 </html>
